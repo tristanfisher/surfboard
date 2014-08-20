@@ -57,13 +57,20 @@ function init_cells(data_source){
     data_source = data_source || user_settings;
 
     for (_setting = 0; _setting < $(".cell").length; _setting++)
-       {
-           $('#' + data_source[_setting].cell_id + "_content").replaceWith('content replaced')
+    {
+        plugin = data_source[_setting].plugin
 
-           //console.log(data_source[_setting].cell_id)
-           //console.log(data_source[_setting].plugin)
-           //console.log('#------------------#')
-       }
+        if (!data_source[_setting].plugin){
+            plugin = '+'
+        }
+
+        // insert into the div, dont replace div itself
+        $('#' + data_source[_setting].cell_id + "_content").html(plugin);
+
+
+
+      //$('#' + data_source[_setting].cell_id + "_content").replaceWith(data_source[_setting].plugin);
+    }
 }
 
 $(document).ready(function(){
