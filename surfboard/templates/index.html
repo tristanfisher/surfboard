@@ -4,12 +4,9 @@
 <script src="./static/cells/mock_user_storage.js" type="text/javascript"></script>
 {% endblock head %}
 
-
 {% block body %}
 
 <div class="outer">
-
-
     {% if cells %}
         {% for cell_number in range(cells) %}
             <div class="wrap">
@@ -23,16 +20,10 @@
                     <img class="loading" src="./static/img/loading.gif">
                 </div>
 
-
                 </div><!--cell -->
             </div>
-
         {% endfor %}
     {% endif %}
-
-
 </div><!-- outer -->
-
-
 
 {% endblock body %}

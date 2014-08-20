@@ -1,6 +1,5 @@
 var user_settings = localStorage.getItem('surfboard');
 
-//console.log(JSON.parse(user_settings));
 user_settings = JSON.parse(user_settings)
 
 // The following won't work if anything has modified Object.prototype
@@ -11,7 +10,7 @@ if (jQuery.isEmptyObject(user_settings)){
 /* ------------------------------------- */
 
 function configure_cell(){
-    console.log('configure called.')
+    console.log('cell configure.')
 }
 
 function remove_cell(){
@@ -19,7 +18,7 @@ function remove_cell(){
 }
 
 function refresh_cell(){
-    console.log('so fresh')
+    console.log('cell refresh')
 }
 
 function dispatch(_func, _args){
@@ -30,48 +29,26 @@ function dispatch(_func, _args){
 /* --------------------- */
 $(document).ready( function() {
 
-$(".surf-refresh").click(function() {
-    refresh_cell()
-  //$( this ).slideUp();
-});
+    $(".surf-refresh").click(function() {
+        refresh_cell()
+      //$( this ).slideUp();
+    });
 
 
-$(".surf-configure").click(function() {
-    configure_cell()
-});
+    $(".surf-configure").click(function() {
+        configure_cell()
+    });
 
-$(".surf-remove").click(function() {
-    remove_cell()
-  //$( this ).slideUp();
-});
-
+    $(".surf-remove").click(function() {
+        remove_cell()
+      //$( this ).slideUp();
+    });
 
 }); //<------document ready
-
-
-
-
-/*
-// Try to populate each of the cells with the user specified content.
-//
-*/
 
 function map(){
     return 'map'
 }
-
-/*
-$(document).ready(function() {
-
-
-    $(".region").click(function(e){
-    e.preventDefault();
-        var content = $(this).html();
-        $('#map').replaceWith('<div class="region">'+content+'</div>');
-    });
-
-});
-*/
 
 function init_cells(data_source){
 // Initialize the cells with content from data_source.  This function accepts
@@ -81,7 +58,7 @@ function init_cells(data_source){
 
     for (_setting = 0; _setting < $(".cell").length; _setting++)
        {
-           $('#' + data_source[_setting].cell_id + "_content").replaceWith('REPLACED')
+           $('#' + data_source[_setting].cell_id + "_content").replaceWith('content replaced')
 
            //console.log(data_source[_setting].cell_id)
            //console.log(data_source[_setting].plugin)

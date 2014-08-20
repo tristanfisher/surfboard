@@ -9,7 +9,7 @@
 
 /* CELLS */
 .cell{
-	font-family: "Andale Mono";
+	font-family: "Andale Mono",  "Lucida Console", monospace;
 	font-size:64px;
 	color: #ddd;
 	padding: 0px;
