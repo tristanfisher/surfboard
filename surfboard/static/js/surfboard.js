@@ -49,19 +49,23 @@ function map(){
 }
 
 function weather(){
-    /*
-    $.ajax({
-        url: url,
-        data: data,
-        success: success,
-        dataType: dataType
-    });
-    */
-    return "weather"
+
+    $.get('static/cells/weather/weather.html')
+    //return "weather"
 }
 
 function image(_args){
-    return "IMAGE!"
+    //return "IMAGE!";
+
+    console.log(_args)
+
+    $.ajax({
+        url: _args['url'],
+        //data: null,
+        success: console.log('successfully fetched image'),
+        dataType: 'html'
+    });
+
 }
 
 function chat(_args){
@@ -74,6 +78,7 @@ function null_cell(_args){
 
 function dispatch(_func, _args){
     //Switch dispatcher:
+    /*
     switch(_func){
         case "weather": return weather(_args); break;
         case "map": return map(_args); break;
@@ -81,6 +86,13 @@ function dispatch(_func, _args){
         case "image": return image(_args); break;
         case null: return null_cell(_args); break;
     }
+    */
+
+    //or if we're not concerned about conflicting namespace:
+    _func = window[_func]
+    if ( typeof _func === "function" ) return _func(_args);
+    else return '+';
+
 }
 
 /* ------------------------------------- */
@@ -95,19 +107,20 @@ function init_cells(data_source){
     for (_setting = 0; _setting < $(".cell").length; _setting++)
     {
         plugin = data_source[_setting].plugin;
+        plugin_data = data_source[_setting].data;
 
         if (!data_source[_setting].plugin){
             plugin = null;
         }
 
-        // insert into the div, dont replace div itself
-        try{ dispatch(plugin); } //if fails, plugin not available
-        catch(err){ console.error("Plugin not available: " + err); }
+        // todo:: revamp this -- I'm not sure it actually prevents
+        // a broken plugin from affecting others.
+        try{ dispatch_return = dispatch(plugin(plugin_data)) }
+        catch(err){
+            console.error("Plugin not available: " + err);
+            dispatch_return = '<i class="fa fa-puzzle-piece"> Failed to load plugin: <i>' + plugin + '</i></i>'
+        }
 
-        dispatch_return = dispatch(plugin)
-        console.log(dispatch_return)
-
-        //$('#' + data_source[_setting].cell_id + "_content").html(plugin);
         $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
     }
 
