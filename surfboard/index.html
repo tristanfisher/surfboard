@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="./static/css/layout.css" rel="stylesheet">
+    <link href="./static/css/site.css" rel="stylesheet">
+    <!-- font awesome -->
+    <link href="./static/css/font-awesome.min.css" rel="stylesheet">
+    <script src="./static/js/firebase_1_0_15.js" type="text/javascript"></script>
+    <script src="./static/js/jquery-1.11.1.min.js"></script>
+    <script src="./static/js/surfboard.js" type="text/javascript"></script>
+    <!--<script src="./static/js/jquery-1.11.1.min.map"></script>-->
+</head>
+<body>
+
+<!-- pretend that we hit user storage -->
+<script src="./tests/mock_user_storage.js" type="text/javascript"></script>
+
+<! --
+
+for cell in user_data[cells]:
+
+    todo active v. archived
+
+    user_data[cells]:
+
+        aaa - { position: 1, type: weather, id: blah }
+        bbb - { position: 2, type: chat, id: blahblah, other_data: [] }
+
+    populate cell.
+
+    each cell then tries to look into user_data[cells][cell-type_or_cell-id][data] for what it needs
+    e.g.
+        user_data[
+
+    replacing a cell means calling the javascript and passing args to the function
+
+
+-->
+
+
+<div class="outer">
+
+<div class="wrap"><div class="cell" id="cell1">
+<div class="cell-controls">
+    <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
+    <i class="surf-configure fa fa-cog"></i>
+    <i class="surf-remove fa fa-eject"></i>
+</div>
+
+    <img class="loading" src="./static/img/loading.gif">
+
+
+</div></div>
+
+<div class="wrap"><div class="cell" id="cell2">
+<div class="cell-controls">
+    <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
+    <i class="surf-configure fa fa-cog"></i>
+    <i class="surf-remove fa fa-eject"></i>
+</div>
+
+
+    <img class="loading" src="./static/img/loading.gif">
+</div></div>
+
+<div class="wrap"><div class="cell" id="cell3">
+<div class="cell-controls">
+    <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
+    <i class="surf-configure fa fa-cog"></i>
+    <i class="surf-remove fa fa-eject"></i>
+</div>
+
+    <img class="loading" src="./static/img/loading.gif"></div></div>
+
+<div class="wrap"><div class="cell" id="cell4">
+<div class="cell-controls">
+    <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
+    <i class="surf-configure fa fa-cog"></i>
+    <i class="surf-remove fa fa-eject"></i>
+</div>
+
+    <img class="loading" src="./static/img/loading.gif"></div></div>
+
+<div class="wrap"><div class="cell" id="cell5">
+<div class="cell-controls">
+    <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
+    <i class="surf-configure fa fa-cog"></i>
+    <i class="surf-remove fa fa-eject"></i>
+</div>
+
+    <img class="loading" src="./static/img/loading.gif"></div></div>
+
+<div class="wrap"><div class="cell" id="cell6">
+<div class="cell-controls">
+    <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
+    <i class="surf-configure fa fa-cog"></i>
+    <i class="surf-remove fa fa-eject"></i>
+</div>
+
+    <img class="loading" src="./static/img/loading.gif"></div></div>
+
+</div><!-- outer -->
+
+</body></html>

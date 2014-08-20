@@ -1,0 +1,25 @@
+img.loading {
+    margin: 50% 0 0 50%;
+}
+
+.cell-controls {
+    font-size:.40em;
+    text-align: right;
+    background-color: #AAA;
+    z-index: 10; /* put controls on top*/
+    /* hide cell controls unless cell is hovered */
+    visibility: hidden;
+    opacity: 0.4;
+}
+
+/* if a user hovers over cell, display the controls */
+.cell:hover + .cell-controls{
+    background-color: #F00;
+    visibility: visible;
+}
+
+/*.cell-controls i{}*/
+
+.cell-controls i:hover {
+    color:#FFF;
+}

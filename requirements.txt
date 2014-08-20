@@ -1,0 +1,15 @@
+Flask
+Flask-HTTPAuth
+Flask-SQLAlchemy
+Flask-Script
+Jinja2
+MarkupSafe
+Pygments
+SQLAlchemy
+Werkzeug
+coverage
+httpie
+itsdangerous
+nose
+redis
+requests
