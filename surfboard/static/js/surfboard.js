@@ -8,6 +8,7 @@ if (jQuery.isEmptyObject(user_settings)){
 }
 
 /* ------------------------------------- */
+// Controls
 
 function configure_cell(){
     console.log('cell configure.')
@@ -21,12 +22,6 @@ function refresh_cell(){
     console.log('cell refresh')
 }
 
-function dispatch(_func, _args){
-    console.log(_func, _args);
-}
-
-
-/* --------------------- */
 $(document).ready( function() {
 
     $(".surf-refresh").click(function() {
@@ -46,9 +41,50 @@ $(document).ready( function() {
 
 }); //<------document ready
 
+/* ------------------------------------- */
+// Plugins
+
 function map(){
-    return 'map'
+    return 'MAP!'
 }
+
+function weather(){
+    /*
+    $.ajax({
+        url: url,
+        data: data,
+        success: success,
+        dataType: dataType
+    });
+    */
+    return "weather"
+}
+
+function image(_args){
+    return "IMAGE!"
+}
+
+function chat(_args){
+    return "CHAT!"
+}
+
+function null_cell(_args){
+    return "[Click to add content]"
+}
+
+function dispatch(_func, _args){
+    //Switch dispatcher:
+    switch(_func){
+        case "weather": return weather(_args); break;
+        case "map": return map(_args); break;
+        case "chat": return chat(_args); break;
+        case "image": return image(_args); break;
+        case null: return null_cell(_args); break;
+    }
+}
+
+/* ------------------------------------- */
+// Initialization
 
 function init_cells(data_source){
 // Initialize the cells with content from data_source.  This function accepts
@@ -58,23 +94,26 @@ function init_cells(data_source){
 
     for (_setting = 0; _setting < $(".cell").length; _setting++)
     {
-        plugin = data_source[_setting].plugin
+        plugin = data_source[_setting].plugin;
 
         if (!data_source[_setting].plugin){
-            plugin = '+'
+            plugin = null;
         }
 
         // insert into the div, dont replace div itself
-        $('#' + data_source[_setting].cell_id + "_content").html(plugin);
+        try{ dispatch(plugin); } //if fails, plugin not available
+        catch(err){ console.error("Plugin not available: " + err); }
 
+        dispatch_return = dispatch(plugin)
+        console.log(dispatch_return)
 
-
-      //$('#' + data_source[_setting].cell_id + "_content").replaceWith(data_source[_setting].plugin);
+        //$('#' + data_source[_setting].cell_id + "_content").html(plugin);
+        $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
     }
+
 }
 
 $(document).ready(function(){
-   // populate the cells with content!
+    // populate the cells with content!
     init_cells()
-
 });
