@@ -2,6 +2,8 @@ var user_settings = localStorage.getItem('surfboard');
 
 user_settings = JSON.parse(user_settings)
 
+api_host = 'http://localhost:8000/api'
+
 // The following won't work if anything has modified Object.prototype
 if (jQuery.isEmptyObject(user_settings)){
     console.log('User settings were empty.')
@@ -62,8 +64,24 @@ function map(){
     return 'MAP!'
 }
 
-function weather(){
-    $.get('static/cells/weather/weather.html')
+function weather(zipcode){
+    zipcode = zipcode || 10013;
+
+    function get_weather(callback){ //callback is the return handler
+        $.ajax({
+            url: api_host + '/weather/' + zipcode,
+            data: '',
+            success: callback,
+            error: callback,
+            dataType: 'json'
+        });
+    }
+
+    get_weather(function(parse_weather_callback){
+        console.log(parse_weather_callback.postal_code + ' : ' + parse_weather_callback.skies);
+        return parse_weather_callback.skies;
+    });
+
 }
 
 function image(image_url){
@@ -125,7 +143,13 @@ function init_cells(data_source){
             console.error("Plugin not available: " + err);
             dispatch_return = '<i class="fa fa-puzzle-piece"> Failed to load plugin: <i>' + plugin + '</i></i>'
         }
+
+        // The following is synchronous and a source of woes.
+        // Make this into a callback -- maybe around dispatch_return() ?
+
+        //$('#' + data_source[_setting].cell_id + "_content").live(dispatch_return);
         $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
+        //console.log(dispatch_return)
     }
 
 }
