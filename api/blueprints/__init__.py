@@ -1,7 +1,18 @@
 from flask import Blueprint, g
 from errors import ValidationError, bad_request, not_found
+import json
+
+def get_config_from_json(json_file='./private_keys.json'):
+    try:
+        with open(json_file) as key_file:
+            keys = json.load(key_file)
+            return keys
+    except FileNotFoundError as inst:
+        err, msg = inst.args
+        raise("Couldn't load API key file.  Error: " + msg)
 
 api = Blueprint('api', __name__)
+api_keys = get_config_from_json()
 
 
 @api.errorhandler(ValidationError)
