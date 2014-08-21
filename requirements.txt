@@ -2,6 +2,7 @@ Flask
 Flask-HTTPAuth
 Flask-SQLAlchemy
 Flask-Script
+flask-cors
 Jinja2
 MarkupSafe
 Pygments
