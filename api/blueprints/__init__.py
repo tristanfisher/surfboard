@@ -2,6 +2,30 @@ from flask import Blueprint, g
 from errors import ValidationError, bad_request, not_found
 import json
 
+from datetime import datetime, timedelta
+import pickle
+
+class Cache(object):
+    def __init__(self, filename):
+        self.filename = filename
+
+    def save(self, obj):
+        with open(self.filename, 'wb') as _file:
+            dct = {
+                'obj': obj,
+                'expired': datetime.utcnow() + timedelta(hours=3)
+            }
+            pickle.dump(dct, _file)
+
+    def load(self):
+        try:
+            with open(self.filename, 'rb') as _file:
+                result = pickle.load(_file)
+                if result['expired'] > datetime.utcnow():
+                    return result['obj']
+        except IOError:
+            pass
+
 def get_config_from_json(json_file='./private_keys.json'):
     try:
         with open(json_file) as key_file:
