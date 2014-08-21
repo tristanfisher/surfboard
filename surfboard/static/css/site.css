@@ -1,5 +1,8 @@
 img.loading {
-    margin: 50% 0 0 50%;
+   /* margin: 50% 0 0 50%;*/
+    height:25%;
+    width:25%;
+    margin-top:20%;
 }
 
 .cell_controls {
@@ -17,8 +20,6 @@ img.loading {
     background-color: #F00;
     visibility: visible;
 }
-
-/*.cell_controls i{}*/
 
 .cell_controls i:hover {
     color:#FFF;
