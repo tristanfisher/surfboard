@@ -1,48 +1,30 @@
-from flask import Flask, redirect, json, url_for
-from flask import session, request
-from flask import abort
+from flask import Flask, redirect, json, url_for, g
 from flask import jsonify
+from flask.ext.cors import CORS
+
 import os
 import platform
-
+import sys
 
 app = Flask(__name__)
 app.config.from_object('config')
-
 if platform.system() == 'Darwin':
     app.debug = True
 
 from blueprints import api
 app.register_blueprint(api, url_prefix='/api')
-
-@app.route('/dev-site-map')
-def dev_site_map():
-    links = []
-    for rule in app.url_map.iter_rules():
-        if "GET" in rule.methods:
-            url = rule.rule
-            #url = url_for(rule.endpoint)
-            links.append((url, rule.endpoint))
-    return jsonify(links)
-
-
-@app.route("/site-map")
-def site_map():
-    links = []
-    for rule in app.url_map.iter_rules():
-        # Filter out rules we can't navigate to in a browser
-        # and rules that require parameters
-        if "GET" in rule.methods and len(rule.defaults) >= len(rule.arguments):
-            url = url_for(rule.endpoint)
-            links.append((url, rule.endpoint))
-    # links is now a list of url, endpoint tuples
-    return links
-
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.route('/')
 def index():
-    return 'api'
-
+    """Return api endpoints to the user"""
+    endpoints = []
+    for api_endpoint in app.url_map.iter_rules():
+        if api_endpoint.rule.startswith('/api'):
+            url = api_endpoint.rule
+            methods = api_endpoint.methods
+            endpoints.append((url, str(methods)))
+    return jsonify(endpoints)
 
 
 
