@@ -11,14 +11,15 @@
         {% for cell_number in range(cells) %}
             <div class="wrap">
                 <div class="cell" id="{{cell_number}}">
-                <div class="cell-controls">
-                    <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
-                    <i class="surf-configure fa fa-cog"></i>
-                    <i class="surf-remove fa fa-eject"></i>
-                </div><!--cell controls -->
-                <div id="{{cell_number}}_content">
-                    <img class="loading" src="./static/img/loading.gif">
-                </div>
+                    <div class="cell-controls">
+                        <i class="surf-maximize fa fa-arrows"></i>
+                        <i class="surf-refresh fa fa-refresh"></i><!-- onclick, add class fa-spin for a few seconds-->
+                        <i class="surf-configure fa fa-cog"></i>
+                        <i class="surf-remove fa fa-eject"></i>
+                    </div><!--cell controls -->
+                    <div id="{{cell_number}}_content">
+                        <img class="loading" src="./static/img/loading.gif">
+                    </div>
 
                 </div><!--cell -->
             </div>

@@ -11,31 +11,39 @@ if (jQuery.isEmptyObject(user_settings)){
 // Controls
 
 function configure_cell(){
-    console.log('cell configure.')
+    console.log('cell configure')
 }
 
 function remove_cell(){
-    console.log('cell removed.')
+    console.log('cell removed')
 }
 
 function refresh_cell(){
     console.log('cell refresh')
 }
 
+function maximize_cell(){
+    console.log('cell maximize')
+}
+
 $(document).ready( function() {
 
-    $(".surf-refresh").click(function() {
-        refresh_cell()
+    $(".surf-maximize").click(function() {
+        maximize_cell();
       //$( this ).slideUp();
     });
 
+    $(".surf-refresh").click(function() {
+        refresh_cell();
+      //$( this ).slideUp();
+    });
 
     $(".surf-configure").click(function() {
-        configure_cell()
+        configure_cell();
     });
 
     $(".surf-remove").click(function() {
-        remove_cell()
+        remove_cell();
       //$( this ).slideUp();
     });
 
@@ -50,22 +58,12 @@ function map(){
 
 function weather(){
 
-    $.get('static/cells/weather/weather.html')
-    //return "weather"
+    //$.get('static/cells/weather/weather.html')
+    return "weather"
 }
 
-function image(_args){
-    //return "IMAGE!";
-
-    console.log(_args)
-
-    $.ajax({
-        url: _args['url'],
-        //data: null,
-        success: console.log('successfully fetched image'),
-        dataType: 'html'
-    });
-
+function image(image_url){
+    return $('<img src="' + image_url + '">').fadeIn(500)
 }
 
 function chat(_args){
@@ -73,7 +71,7 @@ function chat(_args){
 }
 
 function null_cell(_args){
-    return "[Click to add content]"
+    return '<i class="fa fa-plus"></i>';
 }
 
 function dispatch(_func, _args){
@@ -91,7 +89,7 @@ function dispatch(_func, _args){
     //or if we're not concerned about conflicting namespace:
     _func = window[_func]
     if ( typeof _func === "function" ) return _func(_args);
-    else return '+';
+    else return null_cell();
 
 }
 
@@ -114,13 +112,12 @@ function init_cells(data_source){
         }
 
         // todo:: revamp this -- I'm not sure it actually prevents
-        // a broken plugin from affecting others.
-        try{ dispatch_return = dispatch(plugin(plugin_data)) }
+        // a broken plugin from affecting others. //plugin_data
+        try{ dispatch_return = dispatch(plugin, plugin_data) }
         catch(err){
             console.error("Plugin not available: " + err);
             dispatch_return = '<i class="fa fa-puzzle-piece"> Failed to load plugin: <i>' + plugin + '</i></i>'
         }
-
         $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
     }
 
