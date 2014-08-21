@@ -9,12 +9,18 @@ if (jQuery.isEmptyObject(user_settings)){
 
 /* ------------------------------------- */
 // Controls
+function new_cell(){
+// not called directly.
+
+}
 
 function configure_cell(){
     console.log('cell configure')
+    //change parameters/replace/archive
 }
 
 function remove_cell(){
+    //move cell to archive or remove it
     console.log('cell removed')
 }
 
@@ -57,9 +63,7 @@ function map(){
 }
 
 function weather(){
-
-    //$.get('static/cells/weather/weather.html')
-    return "weather"
+    $.get('static/cells/weather/weather.html')
 }
 
 function image(image_url){
@@ -71,7 +75,10 @@ function chat(_args){
 }
 
 function null_cell(_args){
-    return '<i class="fa fa-plus"></i>';
+    return $('<i class="fa fa-plus"></i>').click(function(){
+        new_cell();
+
+    });
 }
 
 function dispatch(_func, _args){
