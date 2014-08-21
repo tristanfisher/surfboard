@@ -2,7 +2,7 @@ img.loading {
     margin: 50% 0 0 50%;
 }
 
-.cell-controls {
+.cell_controls {
     font-size:.40em;
     text-align: right;
     background-color: #AAA;
@@ -13,13 +13,13 @@ img.loading {
 }
 
 /* if a user hovers over cell, display the controls */
-.cell:hover + .cell-controls{
+.cell:hover + .cell_controls{
     background-color: #F00;
     visibility: visible;
 }
 
-/*.cell-controls i{}*/
+/*.cell_controls i{}*/
 
-.cell-controls i:hover {
+.cell_controls i:hover {
     color:#FFF;
 }
