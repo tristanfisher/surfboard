@@ -18,7 +18,7 @@ WUNDERGROUND_URL_BASE="{base}{api_key}{suffix}".format(
 @api.route('/weather/<postal_code>', methods=['GET'])
 def return_weather_postal_code(postal_code):
 
-    cache = Cache('weather_cache')
+    cache = Cache('weather_cache_'+postal_code)
     cache_result = cache.load()
 
     if cache_result:
