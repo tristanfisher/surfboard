@@ -12,8 +12,14 @@ if (jQuery.isEmptyObject(user_settings)){
 /* ------------------------------------- */
 // Controls
 function new_cell(){
-// not called directly.
+    // not called directly.
+    console.log('present options for new cell.')
+}
 
+function null_cell(_args){
+    return $('<i class="fa fa-plus"></i>').click(function(){
+        new_cell();
+    });
 }
 
 function configure_cell(){
@@ -67,22 +73,13 @@ function map(){
 function weather(zipcode){
     zipcode = zipcode || 10013;
 
-    function get_weather(callback){ //callback is the return handler
+    function get_weather(){ //callback is the return handler
         $.ajax({
             url: api_host + '/weather/' + zipcode,
-            data: '',
-            success: callback,
-            error: callback,
             dataType: 'json'
-        });
-    }
-
-    get_weather(function(parse_weather_callback){
-        response = parse_weather_callback
-        console.log('postal code: ' + response.zip + ' weather: ' + response.weather);
-        return response.weather;
-    });
-
+        }).done(function(_json_data){ return _json_data.weather });
+    } //get_weather()
+    return get_weather() //return back to dispatch
 }
 
 function image(image_url){
@@ -93,21 +90,14 @@ function chat(_args){
     return "CHAT!"
 }
 
-function null_cell(_args){
-    return $('<i class="fa fa-plus"></i>').click(function(){
-        new_cell();
-
-    });
-}
+/* ------------------------------------- */
+// Initialization
 
 function dispatch(_func, _args){
     _func = window[_func]
-    if ( typeof _func === "function" ) return _func(_args);
-    else return null_cell();
+    if ( typeof _func === "function" ) return _func(_args); //return to init_cells;
+    else return null_cell(_args);
 }
-
-/* ------------------------------------- */
-// Initialization
 
 function init_cells(data_source){
 // Initialize the cells with content from data_source.  This function accepts
@@ -125,21 +115,18 @@ function init_cells(data_source){
             plugin = null;
         }
 
-        // todo:: revamp this -- I'm not sure it actually prevents
-        // a broken plugin from affecting others. //plugin_data
         try{
-
             // This bit is firing syncronously and is returning beore the event returns.
-            //Try promises?
             dispatch_return = dispatch(plugin, plugin_data)
+            console.log(dispatch_return)
 
             if (dispatch_return == undefined){
                 console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
-                dispatch_return = 'error';
+                dispatch_return = 'error'; //replace loading with feedback.
             }
 
             $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
-            console.log(dispatch_return)
+
 
         }
         catch(err){
