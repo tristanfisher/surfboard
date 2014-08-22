@@ -100,22 +100,9 @@ function null_cell(_args){
 }
 
 function dispatch(_func, _args){
-    //Switch dispatcher:
-    /*
-    switch(_func){
-        case "weather": return weather(_args); break;
-        case "map": return map(_args); break;
-        case "chat": return chat(_args); break;
-        case "image": return image(_args); break;
-        case null: return null_cell(_args); break;
-    }
-    */
-
-    //or if we're not concerned about conflicting namespace:
     _func = window[_func]
     if ( typeof _func === "function" ) return _func(_args);
     else return null_cell();
-
 }
 
 /* ------------------------------------- */
@@ -132,26 +119,27 @@ function init_cells(data_source){
         plugin = data_source[_setting].plugin;
         plugin_data = data_source[_setting].data;
 
+        // if the plugin is an empty string, set it to null.
         if (!data_source[_setting].plugin){
             plugin = null;
         }
 
         // todo:: revamp this -- I'm not sure it actually prevents
         // a broken plugin from affecting others. //plugin_data
-        try{ dispatch_return = dispatch(plugin, plugin_data) }
+        try{
+
+            // This bit is firing syncronously and is returning beore the event returns.
+            //Try promises?
+            dispatch_return = dispatch(plugin, plugin_data)
+            $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
+            console.log(dispatch_return)
+
+        }
         catch(err){
             console.error("Plugin not available: " + err);
             dispatch_return = '<i class="fa fa-puzzle-piece"> Failed to load plugin: <i>' + plugin + '</i></i>'
         }
-
-        // The following is synchronous and a source of woes.
-        // Make this into a callback -- maybe around dispatch_return() ?
-
-        //$('#' + data_source[_setting].cell_id + "_content").live(dispatch_return);
-        $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
-        //console.log(dispatch_return)
     }
-
 }
 
 $(document).ready(function(){
