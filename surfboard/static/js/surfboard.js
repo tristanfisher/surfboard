@@ -131,6 +131,11 @@ function init_cells(data_source){
             // This bit is firing syncronously and is returning beore the event returns.
             //Try promises?
             dispatch_return = dispatch(plugin, plugin_data)
+
+            if (dispatch_return == undefined){
+                console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
+            }
+
             $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
             console.log(dispatch_return)
 
