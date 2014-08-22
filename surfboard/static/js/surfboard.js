@@ -78,8 +78,9 @@ function weather(zipcode){
     }
 
     get_weather(function(parse_weather_callback){
-        console.log(parse_weather_callback.postal_code + ' : ' + parse_weather_callback.skies);
-        return parse_weather_callback.skies;
+        response = parse_weather_callback
+        console.log('postal code: ' + response.zip + ' weather: ' + response.weather);
+        return response.weather;
     });
 
 }
@@ -134,6 +135,7 @@ function init_cells(data_source){
 
             if (dispatch_return == undefined){
                 console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
+                dispatch_return = 'error';
             }
 
             $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
