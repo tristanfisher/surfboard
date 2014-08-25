@@ -76,15 +76,19 @@ function map(){
     return 'MAP!'
 }
 
-function weather(zipcode){
+function weather(zipcode, breadcrumb){
     zipcode = zipcode || 10013;
+
+    function format_weather(temp, weather, city){
+        return temp + '<p>' + weather + '<p>' + city + '<p>'
+    }
 
     return new RSVP.Promise(function(resolve, reject){
 
             $.ajax({
                 url: api_host + '/weather/' + zipcode,
                 dataType: 'json'
-            }).done(function(_json_data){ resolve(_json_data.temp_c, _json_data.weather)})
+            }).done(function(_json_data){ resolve([format_weather(_json_data.temp_c, _json_data.weather, _json_data.city), breadcrumb])})
                 .fail(function(jqXHR, textStatus, errorThrown){reject(errorThrown)});
 
     });
@@ -101,10 +105,10 @@ function chat(_args){
 /* ------------------------------------- */
 // Initialization
 
-function dispatch(_func, _args){
+function dispatch(_func, _args, breadcrumb){
     _func = window[_func]
 
-    if ( typeof _func === "function" ){ return _func(_args); } //return to init_cells;
+    if ( typeof _func === "function" ){ return _func(_args, breadcrumb); } //return to init_cells;
     else return null_cell(_args);
 }
 
@@ -116,33 +120,23 @@ function init_cells(data_source){
 
     for (_setting = 0; _setting < $(".cell").length; _setting++)
     {
+        //console.log(data_source[_setting])
         current_cell = data_source[_setting]
         plugin = current_cell.plugin;
         plugin_data = current_cell.data;
 
-
         if (!plugin){ console.warn(current_cell + ' did not have a plugin'); plugin = null; }
 
+        dispatch(plugin, plugin_data, current_cell.cell_id).then(function(dispatch_response){
 
-        dispatch_return = dispatch(plugin, plugin_data)
-
-        console.warn(dispatch_return)
-
-        dispatch_return.then(function(dispatch_response){
-
-            console.log(dispatch_response)
-
-            console.log('cell id: ' + data_source[_setting].cell_id + ' plugin: ' + plugin + '; response: ' + dispatch_response)
-
-
-            $('#' + data_source[_setting].cell_id + "_content").html(dispatch_response);
+            console.log('cell id: ' + current_cell.cell_id + ' plugin: ' + plugin + '; response: ' + dispatch_response)
+            $('#' + dispatch_response[1] + "_content").html(dispatch_response[0]);
 
         }).catch(function(dispatch_error){
             //console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
-        })
+        }) //end of dispatch
 
-
-    }
+    }//end of for loop
 }
 
 $(document).ready(function(){
