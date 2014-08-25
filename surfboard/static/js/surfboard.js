@@ -121,7 +121,7 @@ function init_cells(data_source){
         plugin_data = current_cell.data;
 
 
-        if (!data_source[_setting].plugin){ plugin = null; }
+        if (!plugin){ console.warn(current_cell + ' did not have a plugin'); plugin = null; }
 
 
         dispatch_return = dispatch(plugin, plugin_data)
