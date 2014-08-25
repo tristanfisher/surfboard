@@ -94,8 +94,17 @@ function weather(zipcode, breadcrumb){
     });
 }
 
-function image(image_url){
-    return $('<img src="' + image_url + '">').fadeIn(500)
+function image(image_url, breadcrumb){
+
+    img_script = $('<img src="' + image_url + '">').fadeIn(500)
+
+    return new RSVP.Promise(function(resolve, reject){
+
+        resolve([ img_script, breadcrumb ])
+
+        reject(console.error('image ' + image_url + 'failed to load.'))
+
+    })
 }
 
 function chat(_args){
@@ -118,7 +127,8 @@ function init_cells(data_source){
 
     data_source = data_source || user_settings;
 
-    for (_setting = 0; _setting < $(".cell").length; _setting++)
+    //TODO: remove when ready
+    for (_setting = 0; _setting < $(".cell").length - 3 ; _setting++)
     {
         //console.log(data_source[_setting])
         current_cell = data_source[_setting]
