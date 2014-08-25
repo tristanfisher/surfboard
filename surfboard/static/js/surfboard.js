@@ -127,13 +127,14 @@ function init_cells(data_source){
 
         if (!plugin){ console.warn(current_cell + ' did not have a plugin'); plugin = null; }
 
+        // TODO: I think these are all firing off at once. see current_cell.cell_id.
         dispatch(plugin, plugin_data, current_cell.cell_id).then(function(dispatch_response){
 
             console.log('cell id: ' + current_cell.cell_id + ' plugin: ' + plugin + '; response: ' + dispatch_response)
             $('#' + dispatch_response[1] + "_content").html(dispatch_response[0]);
 
         }).catch(function(dispatch_error){
-            //console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
+            console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
         }) //end of dispatch
 
     }//end of for loop
