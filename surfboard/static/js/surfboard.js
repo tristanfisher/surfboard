@@ -17,9 +17,13 @@ function new_cell(){
 }
 
 function null_cell(_args){
+    return RSVP.reject();
+    /*
     return $('<i class="fa fa-plus"></i>').click(function(){
         new_cell();
     });
+    */
+
 }
 
 function configure_cell(){
@@ -73,13 +77,16 @@ function map(){
 function weather(zipcode){
     zipcode = zipcode || 10013;
 
-    function get_weather(){ //callback is the return handler
-        $.ajax({
-            url: api_host + '/weather/' + zipcode,
-            dataType: 'json'
-        }).done(function(_json_data){ return _json_data.weather });
-    } //get_weather()
-    return get_weather() //return back to dispatch
+    return new RSVP.Promise(function(resolve, reject){
+
+            $.ajax({
+                url: api_host + '/weather/' + zipcode,
+                dataType: 'json'
+            }).done(function(_json_data){ resolve(_json_data.weather)}).fail(function( jqXHR, textStatus, errorThrown){
+                                                                                            reject(errorThrown)
+                                                                                        });
+
+    });
 }
 
 function image(image_url){
@@ -95,7 +102,8 @@ function chat(_args){
 
 function dispatch(_func, _args){
     _func = window[_func]
-    if ( typeof _func === "function" ) return _func(_args); //return to init_cells;
+
+    if ( typeof _func === "function" ){ return _func(_args); } //return to init_cells;
     else return null_cell(_args);
 }
 
@@ -117,15 +125,25 @@ function init_cells(data_source){
 
         try{
             // This bit is firing syncronously and is returning beore the event returns.
+
             dispatch_return = dispatch(plugin, plugin_data)
-            console.log(dispatch_return)
 
-            if (dispatch_return == undefined){
-                console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
+            dispatch_return.then(function(dispatch_response){
+
+                console.log(dispatch_response);
+                $('#' + dispatch_response)
+                //$('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
+
+            }).catch(function(dispatch_error){
+
+                console.error(dispatch_error)
+                //console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
                 dispatch_return = 'error'; //replace loading with feedback.
-            }
 
-            $('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
+
+
+            })
+
 
 
         }
