@@ -17,6 +17,7 @@ function new_cell(){
 }
 
 function null_cell(_args){
+
     return RSVP.reject();
     /*
     return $('<i class="fa fa-plus"></i>').click(function(){
@@ -71,6 +72,7 @@ $(document).ready( function() {
 // Plugins
 
 function map(){
+    return RSVP.reject();
     return 'MAP!'
 }
 
@@ -82,9 +84,8 @@ function weather(zipcode){
             $.ajax({
                 url: api_host + '/weather/' + zipcode,
                 dataType: 'json'
-            }).done(function(_json_data){ resolve(_json_data.weather)}).fail(function( jqXHR, textStatus, errorThrown){
-                                                                                            reject(errorThrown)
-                                                                                        });
+            }).done(function(_json_data){ resolve(_json_data.temp_c, _json_data.weather)})
+                .fail(function(jqXHR, textStatus, errorThrown){reject(errorThrown)});
 
     });
 }
@@ -115,42 +116,32 @@ function init_cells(data_source){
 
     for (_setting = 0; _setting < $(".cell").length; _setting++)
     {
-        plugin = data_source[_setting].plugin;
-        plugin_data = data_source[_setting].data;
-
-        // if the plugin is an empty string, set it to null.
-        if (!data_source[_setting].plugin){
-            plugin = null;
-        }
-
-        try{
-            // This bit is firing syncronously and is returning beore the event returns.
-
-            dispatch_return = dispatch(plugin, plugin_data)
-
-            dispatch_return.then(function(dispatch_response){
-
-                console.log(dispatch_response);
-                $('#' + dispatch_response)
-                //$('#' + data_source[_setting].cell_id + "_content").html(dispatch_return);
-
-            }).catch(function(dispatch_error){
-
-                console.error(dispatch_error)
-                //console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
-                dispatch_return = 'error'; //replace loading with feedback.
+        current_cell = data_source[_setting]
+        plugin = current_cell.plugin;
+        plugin_data = current_cell.data;
 
 
-
-            })
-
+        if (!data_source[_setting].plugin){ plugin = null; }
 
 
-        }
-        catch(err){
-            console.error("Plugin not available: " + err);
-            dispatch_return = '<i class="fa fa-puzzle-piece"> Failed to load plugin: <i>' + plugin + '</i></i>'
-        }
+        dispatch_return = dispatch(plugin, plugin_data)
+
+        console.warn(dispatch_return)
+
+        dispatch_return.then(function(dispatch_response){
+
+            console.log(dispatch_response)
+
+            console.log('cell id: ' + data_source[_setting].cell_id + ' plugin: ' + plugin + '; response: ' + dispatch_response)
+
+
+            $('#' + data_source[_setting].cell_id + "_content").html(dispatch_response);
+
+        }).catch(function(dispatch_error){
+            //console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
+        })
+
+
     }
 }
 
