@@ -42,33 +42,37 @@ def return_weather_postal_code(postal_code):
             weather_data = {}
 
             weather_data['data_source'] = 'wunderground'
+            try:
+                co = response['current_observation']
+                weather_data['city'] = co['display_location']['city']
+                weather_data['state'] = co['display_location']['state']
+                weather_data['country'] = co['display_location']['country']
+                weather_data['zip'] = co['display_location']['zip']
+                weather_data['latitude'] = co['display_location']['latitude']
+                weather_data['longitude'] = co['display_location']['longitude']
+                weather_data['observation_epoch'] = co['observation_epoch']
+                weather_data['weather'] = co['weather']
+                weather_data['temp_f'] = co['temp_f']
+                weather_data['temp_c'] = co['temp_c']
+                weather_data['wind_string'] = co['wind_string']
 
-            co = response['current_observation']
-            weather_data['city'] = co['display_location']['city']
-            weather_data['state'] = co['display_location']['state']
-            weather_data['country'] = co['display_location']['country']
-            weather_data['zip'] = co['display_location']['zip']
-            weather_data['latitude'] = co['display_location']['latitude']
-            weather_data['longitude'] = co['display_location']['longitude']
-            weather_data['observation_epoch'] = co['observation_epoch']
-            weather_data['weather'] = co['weather']
-            weather_data['temp_f'] = co['temp_f']
-            weather_data['temp_c'] = co['temp_c']
-            weather_data['wind_string'] = co['wind_string']
+                sforecastday = response['forecast']['simpleforecast']['forecastday']
+                weather_data['forecast'] = {}
 
-            sforecastday = response['forecast']['simpleforecast']['forecastday']
-            weather_data['forecast'] = {}
+                for day in sforecastday:
+                    weather_data['forecast'][day['date']['day']] = {
+                        'conditions': day['conditions'],
+                        'day': day['date']['day'],
+                        'high': day['low'],
+                        'low': day['high']
+                    }  # weather_data['forecast'][22]
+                weather_data['cache_timestamp'] = int(time())
 
-            for day in sforecastday:
-                weather_data['forecast'][day['date']['day']] = {
-                    'conditions': day['conditions'],
-                    'day': day['date']['day'],
-                    'high': day['low'],
-                    'low': day['high']
-                }  # weather_data['forecast'][22]
-            weather_data['cache_timestamp'] = int(time())
+                cache.save(weather_data)
 
-            cache.save(weather_data)
+            except KeyError:
+                weather_data['status'] = 'error'
+
             weather_data = json.dumps(weather_data)
             return weather_data
 
