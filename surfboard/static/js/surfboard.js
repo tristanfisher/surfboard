@@ -13,7 +13,7 @@ if (jQuery.isEmptyObject(user_settings)){
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames
 // Object.getOwnPropertyNames(response)
 function user_storage(){
-    $.getJSON($SCRIPT_ROOT + '/_get_user_storage',
+    $.getJSON($SCRIPT_ROOT + '/_get_user_settings',
               function(data){
                   /*
                   console.log('response from get_user_storage: ' + data.user_id);
