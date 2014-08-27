@@ -4,9 +4,9 @@
 {% block api_keys %}
 {% if api_keys %}
 <script type="text/javascript">
-    {% for key, value in api_keys.items() %}
-        var api_key_{{key}}="{{ value }}";
-    {% endfor %}
+{% for key, value in api_keys.items() %}
+var api_key_{{key}}="{{ value }}";
+{% endfor %}
 </script>
 {% endif %}
 {% endblock api_keys%}
