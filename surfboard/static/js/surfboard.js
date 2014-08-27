@@ -1,5 +1,4 @@
 var user_settings = localStorage.getItem('surfboard');
-
 user_settings = JSON.parse(user_settings)
 
 api_host = 'http://localhost:8000/api'
@@ -11,9 +10,35 @@ if (jQuery.isEmptyObject(user_settings)){
 
 /* ------------------------------------- */
 // Controls
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames
+// Object.getOwnPropertyNames(response)
+function user_storage(){
+    $.getJSON($SCRIPT_ROOT + '/_get_user_storage',
+              function(data){
+                  /*
+                  console.log('response from get_user_storage: ' + data.user_id);
+                  console.log('response from get_user_storage: ' + Object.getOwnPropertyNames(data));
+                  */
+              })
+    .error(function(){ console.error('failed to get user storage.')})
+    //.complete(function(){ console.debug('finished fetching user settings')});
+
+
+    if(typeof(Storage) !== 'undefined'){
+        // Local storage is available.
+    } else {
+        console.warn('Local Storage is not available.  Congrats on your vintage browser.  Not that this message ' +
+                         'is even properly displaying for you.')
+    }
+}
+
 function new_cell(){
     // not called directly.
     console.log('present options for new cell.')
+}
+
+function archive_cell(){
+
 }
 
 function null_cell(_args){
@@ -24,11 +49,11 @@ function null_cell(_args){
         new_cell();
     });
     */
-
 }
 
 function configure_cell(){
     console.log('cell configure')
+    console.log(this)
     //change parameters/replace/archive
 }
 
@@ -71,9 +96,32 @@ $(document).ready( function() {
 /* ------------------------------------- */
 // Plugins
 
-function map(){
-    return RSVP.reject();
-    return 'MAP!'
+function map(location_data, breadcrumb, api_key){
+//api_key_maps needs to be populated on the page or given to this function
+
+    api_key = api_key || api_key_maps
+
+    //AIzaSyAfV6qE_Vbh0VMD_SlcXZYXtBhxCi6tnEw
+/*
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> \
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=" + api_key></script> \
+ */
+
+    // ECMA approved multiline
+    html_response = '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />' +
+        '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key="' + api_key + '></script>' +
+        '<script type="text/javascript">function initialize() { ' +
+        'var mapOptions = { center: new google.maps.LatLng(-34.397, 150.644), zoom: 8 };' +
+        'var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions); }' +
+        'google.maps.event.addDomListener(window, "load", initialize);' +
+        '</script>';
+
+    //console.log([html_response, 0])
+    return new RSVP.Promise(function(resolve, reject){
+        resolve([html_response, 0])
+            .reject(['Failed to fetch the map.', 2])
+    })
+
 }
 
 function weather(zipcode, breadcrumb){
@@ -100,10 +148,9 @@ function image(image_url, breadcrumb){
 
     return new RSVP.Promise(function(resolve, reject){
 
-        resolve([ img_script, breadcrumb ])
-
-        reject(console.error('image ' + image_url + 'failed to load.'))
-
+        resolve([ img_script, breadcrumb ]).reject()
+        // don't use a reject here because there's not really a failure case to latch onto.
+        //reject(console.error('image ' + image_url + 'failed to load.'))
     })
 }
 
@@ -140,11 +187,12 @@ function init_cells(data_source){
         // TODO: I think these are all firing off at once. see current_cell.cell_id.
         dispatch(plugin, plugin_data, current_cell.cell_id).then(function(dispatch_response){
 
-            console.log('cell id: ' + current_cell.cell_id + ' plugin: ' + plugin + '; response: ' + dispatch_response)
+            //console.log('cell id: ' + current_cell.cell_id + ' plugin: ' + plugin + '; response: ' + dispatch_response)
             $('#' + dispatch_response[1] + "_content").html(dispatch_response[0]);
 
         }).catch(function(dispatch_error){
-            console.error('undefined response from dispatch(' + plugin + ',' + plugin_data + ')')
+            //TODO: find conditions in which this will catch errors.
+            //console.error('undefined response from dispatch(' + plugin + ', ' + plugin_data + ')')
         }) //end of dispatch
 
     }//end of for loop
@@ -153,4 +201,5 @@ function init_cells(data_source){
 $(document).ready(function(){
     // populate the cells with content!
     init_cells()
+    user_storage()
 });
