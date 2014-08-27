@@ -64,7 +64,7 @@ function archive_cell(){
 }
 
 function null_cell(_args){
-
+    console.log('null_cell called')
     return RSVP.reject();
     /*
     return $('<i class="fa fa-plus"></i>').click(function(){
@@ -123,25 +123,32 @@ function map(location_data, breadcrumb, api_key){
 
     api_key = api_key || api_key_maps
 
-    //AIzaSyAfV6qE_Vbh0VMD_SlcXZYXtBhxCi6tnEw
-/*
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> \
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=" + api_key></script> \
- */
+    function initialize() {
+      var mapOptions = {
+        zoom: 8,
+        center: new google.maps.LatLng(-34.397, 150.644)
+      };
+      var map = new google.maps.Map(document.getElementById('#1_content'), mapOptions);
+    }
 
-    // ECMA approved multiline
-    html_response = '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />' +
-        '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key="' + api_key + '></script>' +
-        '<script type="text/javascript">function initialize() { ' +
-        'var mapOptions = { center: new google.maps.LatLng(-34.397, 150.644), zoom: 8 };' +
-        'var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions); }' +
-        'google.maps.event.addDomListener(window, "load", initialize);' +
-        '</script>';
+    function loadScript() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
+          'callback=initialize';
+      document.body.appendChild(script);
+    }
+
+    returner = "<script type='text/javascript'>loadScript();</script>"
+
+    //full_response = "<script>" + initialize + loadScript + "window.onload = map_load();</script>"
+    full_response = "<script>" + initialize + loadScript + "window.onload = loadScript();</script>"
 
     //console.log([html_response, 0])
     return new RSVP.Promise(function(resolve, reject){
-        resolve([html_response, 0])
-            .reject(['Failed to fetch the map.', 2])
+        resolve([full_response, breadcrumb])
+
+        reject(['Failed to fetch the map.', breadcrumb])
     })
 
 }
@@ -159,7 +166,9 @@ function weather(zipcode, breadcrumb){
                 url: api_host + '/weather/' + zipcode,
                 dataType: 'json'
             }).done(function(_json_data){ resolve([format_weather(_json_data.temp_c, _json_data.weather, _json_data.city), breadcrumb])})
-                .fail(function(jqXHR, textStatus, errorThrown){reject(errorThrown)});
+                .fail(function(jqXHR, textStatus, errorThrown){
+                                      reject([errorThrown, breadcrumb])}
+                );
 
     });
 }
@@ -210,6 +219,7 @@ function init_cells(data_source){
         dispatch(plugin, plugin_data, current_cell.cell_id).then(function(dispatch_response){
 
             //console.log('cell id: ' + current_cell.cell_id + ' plugin: ' + plugin + '; response: ' + dispatch_response)
+
             $('#' + dispatch_response[1] + "_content").html(dispatch_response[0]);
 
         }).catch(function(dispatch_error){
