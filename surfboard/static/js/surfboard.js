@@ -9,6 +9,35 @@ if (jQuery.isEmptyObject(user_settings)){
 }
 
 /* ------------------------------------- */
+no_localstorage_message = 'Local Storage is not available.  Congrats on your vintage browser.  ' +
+                            'Not that this message is even properly displaying for you.'
+// window.localStorage == indefinite; code.sessionStorage == stores data for session only
+function get_localstorage(key){
+    if(typeof(Storage) !== 'undefined'){
+        return localStorage.getItem(key);
+    } else {
+        console.warn(no_localstorage_message)
+    }
+}
+
+function set_localstorage(key, value){
+    if(typeof(Storage) !== 'undefined'){
+        localStorage.setItem(key, value);
+    } else {
+        console.warn(no_localstorage_message)
+    }
+}
+
+function remove_localstorage(key){
+    if(typeof(Storage) !== 'undefined'){
+        localStorage.removeItem(key);
+    } else {
+        console.warn(no_localstorage_message)
+    }
+}
+
+
+/* ------------------------------------- */
 // Controls
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames
 // Object.getOwnPropertyNames(response)
@@ -23,13 +52,6 @@ function user_storage(){
     .error(function(){ console.error('failed to get user storage.')})
     //.complete(function(){ console.debug('finished fetching user settings')});
 
-
-    if(typeof(Storage) !== 'undefined'){
-        // Local storage is available.
-    } else {
-        console.warn('Local Storage is not available.  Congrats on your vintage browser.  Not that this message ' +
-                         'is even properly displaying for you.')
-    }
 }
 
 function new_cell(){
@@ -38,7 +60,7 @@ function new_cell(){
 }
 
 function archive_cell(){
-
+//move a cell to the database; remove it from the board.
 }
 
 function null_cell(_args){
