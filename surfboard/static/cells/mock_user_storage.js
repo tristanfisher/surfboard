@@ -6,8 +6,8 @@ var mock_obj = [
     },
     {
         'cell_id': 1,
-        'plugin': 'chat',
-        'data': {'username': 'tristan'}
+        'plugin': 'map',
+        'data': '10012'
     },
     {
         'cell_id': 2,
@@ -21,7 +21,7 @@ var mock_obj = [
     },
     {
         'cell_id': 4,
-        'plugin': 'map',
+        'plugin': 'stub',
         'data': ''
     },
     {
@@ -29,7 +29,6 @@ var mock_obj = [
         'plugin': '',
         'data': ''
     }
-
 ];
 
 localStorage.setItem('surfboard', JSON.stringify(mock_obj));
