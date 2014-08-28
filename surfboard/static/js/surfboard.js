@@ -54,34 +54,29 @@ function user_storage(){
 
 }
 
-function new_cell(){
-    // not called directly.
-    console.log('present options for new cell.')
+function new_cell(_args, breadcrumb){
+    // catch _args because this is a positional argument
+    return new RSVP.Promise(function(resolve, reject){
+        resolve(['+', breadcrumb])
+        reject(['!!!', breadcrumb])
+    })
+
+
+    //return $('<i class="fa fa-plus"></i>').click(function(){
+    //    new_cell();
+    //});
+
 }
 
 function archive_cell(){
+    console.log('cell archived')
 //move a cell to the database; remove it from the board.
-}
-
-function null_cell(_args){
-    console.log('null_cell called')
-    return RSVP.reject();
-    /*
-    return $('<i class="fa fa-plus"></i>').click(function(){
-        new_cell();
-    });
-    */
 }
 
 function configure_cell(){
     console.log('cell configure')
     console.log(this)
     //change parameters/replace/archive
-}
-
-function remove_cell(){
-    //move cell to archive or remove it
-    console.log('cell removed')
 }
 
 function refresh_cell(){
@@ -109,7 +104,7 @@ $(document).ready( function() {
     });
 
     $(".surf-remove").click(function() {
-        remove_cell();
+        archive_cell();
       //$( this ).slideUp();
     });
 
@@ -117,6 +112,14 @@ $(document).ready( function() {
 
 /* ------------------------------------- */
 // Plugins
+
+function stub(_args, breadcrumb){
+    return new RSVP.Promise(function(resolve, reject){
+        resolve(['stub', breadcrumb])
+        reject(['failed', breadcrumb])
+    })
+
+}
 
 function map(location_data, breadcrumb, api_key){
 //api_key_maps needs to be populated on the page or given to this function
@@ -128,7 +131,7 @@ function map(location_data, breadcrumb, api_key){
         zoom: 8,
         center: new google.maps.LatLng(-34.397, 150.644)
       };
-      var map = new google.maps.Map(document.getElementById('#1_content'), mapOptions);
+      var map = new google.maps.Map(document.getElementById('#' + breadcrumb + '_content'), mapOptions);
     }
 
     function loadScript() {
@@ -139,10 +142,10 @@ function map(location_data, breadcrumb, api_key){
       document.body.appendChild(script);
     }
 
-    returner = "<script type='text/javascript'>loadScript();</script>"
-
-    //full_response = "<script>" + initialize + loadScript + "window.onload = map_load();</script>"
     full_response = "<script>" + initialize + loadScript + "window.onload = loadScript();</script>"
+
+    //until problems with json are worked out
+    full_response = "map placeholder"
 
     //console.log([html_response, 0])
     return new RSVP.Promise(function(resolve, reject){
@@ -193,10 +196,13 @@ function chat(_args){
 // Initialization
 
 function dispatch(_func, _args, breadcrumb){
+
+    if (!_func){ _func = 'new_cell'}
     _func = window[_func]
 
     if ( typeof _func === "function" ){ return _func(_args, breadcrumb); } //return to init_cells;
-    else return null_cell(_args);
+    else return new_cell(_args, breadcrumb); // TODO: this is now an error handler -- not a call to new_cell()
+
 }
 
 function init_cells(data_source){
@@ -205,15 +211,13 @@ function init_cells(data_source){
 
     data_source = data_source || user_settings;
 
-    //TODO: remove when ready
-    for (_setting = 0; _setting < $(".cell").length - 3 ; _setting++)
+    for (_setting = 0; _setting < $(".cell").length; _setting++)
     {
+
         //console.log(data_source[_setting])
         current_cell = data_source[_setting]
         plugin = current_cell.plugin;
         plugin_data = current_cell.data;
-
-        if (!plugin){ console.warn(current_cell + ' did not have a plugin'); plugin = null; }
 
         // TODO: I think these are all firing off at once. see current_cell.cell_id.
         dispatch(plugin, plugin_data, current_cell.cell_id).then(function(dispatch_response){
