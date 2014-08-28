@@ -56,15 +56,13 @@ function user_storage(){
 
 function new_cell(_args, breadcrumb){
     // catch _args because this is a positional argument
+
+    add_cell = $('<i class="fa fa-plus"></i>').click(function(){ console.log('new_cell()'); });
+
     return new RSVP.Promise(function(resolve, reject){
-        resolve(['+', breadcrumb])
+        resolve([add_cell, breadcrumb])
         reject(['!!!', breadcrumb])
     })
-
-
-    //return $('<i class="fa fa-plus"></i>').click(function(){
-    //    new_cell();
-    //});
 
 }
 
