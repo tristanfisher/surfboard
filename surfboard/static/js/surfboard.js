@@ -57,11 +57,9 @@ function user_storage(){
 function new_cell(_args, breadcrumb){
     // catch _args because this is a positional argument
 
-    add_cell = $('<i class="fa fa-plus"></i>').click(function(){ console.log('new_cell()'); });
-
     return new RSVP.Promise(function(resolve, reject){
-        resolve([add_cell, breadcrumb])
-        reject(['!!!', breadcrumb])
+        resolve(['<a class="populate_cell fa fa-plus"></a>', breadcrumb])
+        reject([':( Error', breadcrumb])
     })
 
 }
@@ -73,7 +71,7 @@ function archive_cell(){
 
 function configure_cell(){
     console.log('cell configure')
-    console.log(this)
+    //console.log(this)
     //change parameters/replace/archive
 }
 
@@ -234,6 +232,14 @@ function init_cells(data_source){
 
 $(document).ready(function(){
     // populate the cells with content!
-    init_cells()
-    user_storage()
+    init_cells();
+    user_storage();
+
+    $('body').on('click', function(evt){
+        if($(evt.target).is('.populate_cell')){
+            console.log($(evt.target).parent('.cell_content'));
+            $(evt.target).parent('.cell_content').html('some add window');
+        }
+    });
+
 });

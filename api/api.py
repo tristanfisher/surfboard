@@ -1,10 +1,8 @@
-from flask import Flask, redirect, json, url_for, g
+from flask import Flask
 from flask import jsonify
 from flask.ext.cors import CORS
 
-import os
 import platform
-import sys
 
 app = Flask(__name__)
 app.config.from_object('config')

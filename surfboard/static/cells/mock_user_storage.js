@@ -2,7 +2,7 @@ var mock_obj = [
     {
         'cell_id': 0,
         'plugin': 'weather',
-        'data': '11201'
+        'data': '98109'
     },
     {
         'cell_id': 1,

@@ -5,6 +5,7 @@ import json
 from datetime import datetime, timedelta
 import pickle
 
+#shelve would be cleaner here
 class Cache(object):
     def __init__(self, filename):
         self.filename = filename
