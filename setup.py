@@ -16,7 +16,7 @@ setup(
         name = 'surfboard',
         version = '',
         author = 'Tristan Fisher',
-        author_email = 'code@tristanfisher.com.com',
+        author_email = 'code@tristanfisher.com',
         description = "surfboard ",
         long_description = open(os.path.join(os.path.realpath(os.path.dirname(__file__)), 'README.md'), 'r').read(),
 #        scripts = [mainscript],
